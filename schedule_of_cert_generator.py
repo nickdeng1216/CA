@@ -44,8 +44,8 @@ def cer_generating():
             csv_file.close()
             mydb = mariadb.connect(
                 host="localhost",
-                user="root",
-                passwd=".",
+                user="intercloudca",
+                passwd="p@ssw0rd",
                 database="ca"
             )
             cursor = mydb.cursor()
