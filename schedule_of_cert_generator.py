@@ -33,7 +33,7 @@ def cer_generating():
             # move public key to ..
             src_pk = directory_request_processing + req + os.sep + req + ".pem"
             dst_pk = directory_public_key + req + ".pem"
-            shutil.move(src_pk, dst_pk)
+            shutil.copy(src_pk, dst_pk)
             # save to database
             file_mapping = directory_request_processing + req + os.sep + "mapping"
             csv_file = open(file_mapping, "r")
