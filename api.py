@@ -28,8 +28,8 @@ def request_cert():
         return_value = cert
         mydb = mariadb.connect(
             host="localhost",
-            user="root",
-            passwd=".",
+            user="intercloudca",
+            passwd="p@ssw0rd",
             database="CA"
         )
         cursor = mydb.cursor()
