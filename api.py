@@ -63,9 +63,9 @@ def request_friend():
         return_value = public_key
         mydb = mariadb.connect(
             host="localhost",
-            user="root",
-            passwd=".",
-            database="ca"
+            user="intercloudca",
+            passwd="p@ssw0rd",
+            database="CA"
         )
         cursor = mydb.cursor()
         cursor.execute("INSERT INTO FRIEND (REQUESTFOR, REQUESTFROM, EMAIL) VALUES(%s, %s,%s) ",
@@ -80,10 +80,9 @@ def upload():
     content = request.get_json()
     domain = content['domain']
     csr = content['csr']
-    mapping = content['mapping']
+    email = content['email']
     public_key = content['publickey']
-    save_certificate_request(csr, mapping, public_key, domain)
-    # save_file(directory_public_key + domain + ".pem", public_key)
+    save_certificate_request(csr, email, public_key, domain)
 
     return "ok"
 
@@ -96,14 +95,25 @@ def save_file(path, content):
     return True
 
 
-def save_certificate_request(cer, mapping, public_key, domain):
+def save_certificate_request(cer, email, public_key, domain):
     path = directory_request + domain + os.sep
     if os.path.exists(path):
         return False
     os.mkdir(path)
     save_file(path + domain + ".csr", cer)
-    save_file(path + "mapping", mapping)
+    save_file(path + "email", email)
     save_file(path + domain + ".pem", public_key)
+    if cer is not None:
+        mydb = mariadb.connect(
+            host="localhost",
+            user="intercloudca",
+            passwd="p@ssw0rd",
+            database="CA"
+        )
+        cursor = mydb.cursor()
+        cursor.execute("INSERT INTO FRIEND (DOMAIN, EMAIL) VALUES(%s, %s,%s) ",
+                       (domain, email))
+        mydb.commit()
     return True
 
 

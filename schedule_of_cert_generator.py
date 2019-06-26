@@ -2,7 +2,7 @@ import os
 import subprocess
 import shutil
 import mysql.connector as mariadb
-import csv
+# import csv
 import time
 
 directory_root = os.getcwd() + os.sep + "cert" + os.sep
@@ -35,13 +35,10 @@ def cer_generating():
             dst_pk = directory_public_key + req + ".pem"
             shutil.copy(src_pk, dst_pk)
             # save to database
-            file_mapping = directory_request_processing + req + os.sep + "mapping"
-            csv_file = open(file_mapping, "r")
-            csv_reader = csv.reader(csv_file, delimiter=',')
-            for row in csv_reader:
-                email = row[0]
-                domain = row[1]
-            csv_file.close()
+            f = open(directory_request_processing + req + os.sep + "email", "r")
+            email = f.readline()
+            domain = req
+
             mydb = mariadb.connect(
                 host="localhost",
                 user="intercloudca",
@@ -49,14 +46,15 @@ def cer_generating():
                 database="CA"
             )
             cursor = mydb.cursor()
+
             cursor.execute("UPDATE CERT SET GENERATETIME = NOW() WHERE EMAIL=%s AND DOMAIN =%s",
                            (email, domain))
             mydb.commit()
             shutil.move(directory_request_processing + req, directory_request_completed + req)
-            os.rename(directory_request_completed + req,
-                      directory_request_completed + req + time.strftime(
-                          '%Y%m%d%H%M%S', time.localtime(
-                              int(round(time.time() * 1000)) / 1000)))
+            # os.rename(directory_request_completed + req,
+            #           directory_request_completed + req + time.strftime(
+            #               '%Y%m%d%H%M%S', time.localtime(
+            #                   int(round(time.time() * 1000)) / 1000)))
 
 
 if __name__ == '__main__':
