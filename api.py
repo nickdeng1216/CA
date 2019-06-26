@@ -1,3 +1,5 @@
+import time
+
 from flask import Flask
 from flask import request
 import os
@@ -11,6 +13,9 @@ directory_request = directory_root + "request" + os.sep
 directory_public_key = directory_root + "publickey" + os.sep
 directory_issued = directory_root + "issued" + os.sep
 directory_issued_completed = directory_issued + "completed" + os.sep
+timestamp = time.strftime(
+    '%Y%m%d%H%M%S', time.localtime(
+        int(round(time.time() * 1000)) / 1000))
 
 
 @app.route('/cert', methods=['POST'])
@@ -36,7 +41,7 @@ def request_cert():
         cursor.execute("UPDATE CERT SET DOWNLOADTIME = NOW() WHERE EMAIL=%s AND DOMAIN =%s",
                        (email, domain))
         mydb.commit()
-        shutil.move(src, dst)
+        shutil.move(src, dst + timestamp)
 
     return return_value
 
