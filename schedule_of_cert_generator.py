@@ -51,10 +51,10 @@ def cer_generating():
                            (email, domain))
             mydb.commit()
             shutil.move(directory_request_processing + req, directory_request_completed + req)
-            # os.rename(directory_request_completed + req,
-            #           directory_request_completed + req + time.strftime(
-            #               '%Y%m%d%H%M%S', time.localtime(
-            #                   int(round(time.time() * 1000)) / 1000)))
+            os.rename(directory_request_completed + req,
+                      directory_request_completed + req + time.strftime(
+                          '%Y%m%d%H%M%S', time.localtime(
+                              int(round(time.time() * 1000)) / 1000)))
 
 
 if __name__ == '__main__':
