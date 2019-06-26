@@ -82,8 +82,8 @@ def upload():
     csr = content['csr']
     mapping = content['mapping']
     public_key = content['publickey']
-    save_certificate_request(csr, mapping, domain)
-    save_file(directory_public_key + domain + ".pem", public_key)
+    save_certificate_request(csr, mapping, public_key, domain)
+    # save_file(directory_public_key + domain + ".pem", public_key)
 
     return "ok"
 
@@ -96,13 +96,14 @@ def save_file(path, content):
     return True
 
 
-def save_certificate_request(cer, mapping, domain):
+def save_certificate_request(cer, mapping, public_key, domain):
     path = directory_request + domain + os.sep
     if os.path.exists(path):
         return False
     os.mkdir(path)
     save_file(path + domain + ".csr", cer)
     save_file(path + "mapping", mapping)
+    save_file(path + domain + ".pem", public_key)
     return True
 
 

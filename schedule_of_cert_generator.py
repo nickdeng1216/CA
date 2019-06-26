@@ -2,7 +2,6 @@ import os
 import subprocess
 import shutil
 import mysql.connector as mariadb
-import zipfile
 import csv
 import time
 
@@ -14,26 +13,13 @@ directory_public_key = directory_root + "publickey" + os.sep
 directory_issued = directory_root + "issued" + os.sep
 
 
-# def unzip(filename):
-#     src = directory_request + filename + ".zip"
-#     dst = directory_request_completed + filename + "." + time.strftime('%Y%m%d%H%M%S', time.localtime(
-#         int(round(time.time() * 1000)) / 1000)) + ".zip"
-#     zip_file = zipfile.ZipFile(directory_request + filename + ".zip")
-#     for name in zip_file.namelist():
-#         zip_file.extract(name, directory_request_processing + filename)
-#     zip_file.close()
-#     shutil.move(src, dst)
-
-
 def request_processing():
     requests = os.listdir(directory_request)
     for req in requests:
         file_info = os.path.splitext(req)
+
         if file_info[1] != "":
-            shutil.copytree(directory_request + file_info[0],
-                        directory_request_completed + file_info[0] + time.strftime('%Y%m%d%H%M%S', time.localtime(
-                            int(round(time.time() * 1000)) / 1000)))
-            shutil.move(directory_request + file_info[0], directory_request_processing + file_info[0])
+            shutil.move(directory_request + req, directory_request_processing + req)
 
 
 def cer_generating():
@@ -66,14 +52,13 @@ def cer_generating():
             cursor.execute("UPDATE CERT SET GENERATETIME = NOW() WHERE EMAIL=%s AND DOMAIN =%s",
                            (email, domain))
             mydb.commit()
-            if cursor.rowcount > 0:
-                shutil.rmtree(directory_request_processing + req)
-
-
-# def store_public_key:
+            shutil.move(directory_request_processing + req, directory_request_completed + req)
+            os.rename(directory_request_completed + req,
+                      directory_request_completed + req + time.strftime(
+                          '%Y%m%d%H%M%S', time.localtime(
+                              int(round(time.time() * 1000)) / 1000)))
 
 
 if __name__ == '__main__':
-    # request_processing()
+    request_processing()
     cer_generating()
-    # store_public_key()
