@@ -111,7 +111,7 @@ def save_certificate_request(cer, email, public_key, domain):
             database="CA"
         )
         cursor = mydb.cursor()
-        cursor.execute("INSERT INTO FRIEND (DOMAIN, EMAIL) VALUES(%s, %s) ",
+        cursor.execute("INSERT INTO CERT (DOMAIN, EMAIL) VALUES(%s, %s) ",
                        (domain, email))
         mydb.commit()
     return True
