@@ -80,8 +80,9 @@ def upload():
     content = request.get_json()
     domain = content['domain']
     csr = content['csr']
+    mapping = content['mapping']
     public_key = content['publickey']
-    save_file(directory_request + domain + ".csr", csr)
+    save_certificate_request(csr, mapping, domain)
     save_file(directory_public_key + domain + ".pem", public_key)
 
     return "ok"
@@ -95,4 +96,18 @@ def save_file(path, content):
     return True
 
 
-app.run(host='0.0.0.0', port=5000)
+def save_certificate_request(cer, mapping, domain):
+    path = directory_request + domain + os.sep
+    if os.path.exists(path):
+        return False
+    os.mkdir(path)
+    save_file(path + domain + ".csr", cer)
+    save_file(path + "mapping", mapping)
+    return True
+
+
+if __name__ == '__main__':
+    from werkzeug.contrib.fixers import ProxyFix
+
+    app.wsgi_app = ProxyFix(app.wsgi_app)
+    app.run()
