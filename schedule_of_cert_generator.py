@@ -46,7 +46,7 @@ def cer_generating():
                 host="localhost",
                 user="intercloudca",
                 passwd="p@ssw0rd",
-                database="ca"
+                database="CA"
             )
             cursor = mydb.cursor()
             cursor.execute("UPDATE CERT SET GENERATETIME = NOW() WHERE EMAIL=%s AND DOMAIN =%s",
