@@ -28,7 +28,7 @@ def request_cert():
     src = directory_issued + domain + ".cer"
     dst = directory_issued_completed + domain + ".cer"
     return_value = bytes('No certificate generated.', 'utf-8')
-    cert = bytes(get_file(src), 'utf-8')
+    cert = get_file(src)
     if cert is not None:
         return_value = cert
         mydb = mariadb.connect(
@@ -50,7 +50,7 @@ def get_file(src):
     if not os.path.isfile(src):
         return None
     with open(src, 'r') as content_file:
-        return content_file.read()
+        return bytes(content_file.read(), 'utf-8')
 
 
 @app.route('/friend', methods=['POST'])
@@ -63,7 +63,7 @@ def request_friend():
     src = directory_public_key + request_for + ".pem"
 
     return_value = bytes('No public key found.', 'utf-8')
-    public_key = bytes(get_file(src), 'utf-8')
+    public_key = get_file(src)
     if public_key is not None:
         return_value = public_key
         mydb = mariadb.connect(
