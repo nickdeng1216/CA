@@ -30,7 +30,7 @@ def request_cert():
             host="localhost",
             user="root",
             passwd=".",
-            database="ca"
+            database="CA"
         )
         cursor = mydb.cursor()
         cursor.execute("UPDATE CERT SET DOWNLOADTIME = NOW() WHERE EMAIL=%s AND DOMAIN =%s",
@@ -121,4 +121,4 @@ if __name__ == '__main__':
     from werkzeug.contrib.fixers import ProxyFix
 
     app.wsgi_app = ProxyFix(app.wsgi_app)
-    app.run()
+    app.run(debug=True)
