@@ -27,7 +27,8 @@ def request_cert():
     email = content['email']
     src = directory_issued + domain + ".cer"
     dst = directory_issued_completed + domain + ".cer"
-    return_value = bytes('No certificate generated.', 'utf-8')
+    # return_value = bytes('No certificate generated.', 'utf-8')
+    return_value = bytes('No certificate generated.')
     cert = get_file(src)
     if cert is not None:
         return_value = cert
@@ -50,7 +51,8 @@ def get_file(src):
     if not os.path.isfile(src):
         return None
     with open(src, 'r') as content_file:
-        return bytes(content_file.read(), 'utf-8')
+        # return bytes(content_file.read(), 'utf-8')
+        return bytes(content_file.read())
 
 
 @app.route('/friend', methods=['POST'])
@@ -62,7 +64,8 @@ def request_friend():
     email = content['email']
     src = directory_public_key + request_for + ".pem"
 
-    return_value = bytes('No public key found.', 'utf-8')
+    # return_value = bytes('No public key found.', 'utf-8')
+    return_value = bytes('No public key found.')
     public_key = get_file(src)
     if public_key is not None:
         return_value = public_key
