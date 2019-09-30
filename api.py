@@ -1,10 +1,13 @@
 import time
+import traceback
 
 from flask import Flask
 from flask import request
 import os
 import mysql.connector as mariadb
 import shutil
+import logging
+import sys
 
 app = Flask(__name__)
 
@@ -126,7 +129,13 @@ def save_certificate_request(cer, email, public_key, domain):
 
 
 if __name__ == '__main__':
-    from werkzeug.contrib.fixers import ProxyFix
+    try:
+        from werkzeug.contrib.fixers import ProxyFix
 
-    app.wsgi_app = ProxyFix(app.wsgi_app)
-    app.run(debug=True)
+        app.wsgi_app = ProxyFix(app.wsgi_app)
+        app.run(debug=True)
+    except Exception as e:
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
+        logging.error(lines, 'exc_type=' + exc_type + ',exc_value=' + exc_value + ',exc_traceback=' + exc_traceback,
+                      exc_info=e)
